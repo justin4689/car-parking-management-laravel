@@ -1,6 +1,4 @@
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { Link } from "@inertiajs/react"
-import { SelectValue } from "@radix-ui/react-select";
 
 interface LinkProps {
     active: boolean;

@@ -49,4 +49,15 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
+
+
+    public function vehicleIns()
+    {
+        return $this->hasMany(VehicleIn::class);
+    }
+
+    public function vehicleOuts()
+    {
+        return $this->hasMany(VehicleOut::class);
+    }
 }
