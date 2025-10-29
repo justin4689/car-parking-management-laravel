@@ -28,10 +28,10 @@ export const Pagination = ({ pagination,  totalCount, filteredCount, search } : 
 
             {/* Pagination information */}
             {search ? (
-                <p>Showing <strong>{filteredCount}</strong> filtered result{filteredCount !== 1 && 's'} out of <strong>{totalCount}</strong> entr{totalCount !== 1 ? 'ies' : 'y'} </p>
+                <p className="text-sm">Showing <strong>{filteredCount}</strong> filtered result{filteredCount !== 1 && 's'} out of <strong>{totalCount}</strong> entr{totalCount !== 1 ? 'ies' : 'y'} </p>
 
             ) : (
-                <p>Showing <strong>{pagination.from}</strong> to <strong>{pagination.to}</strong> out of <strong>{pagination.total}</strong> entr{totalCount !== 1 ? 'ies' : 'y'} </p>
+                <p className="text-sm">Showing <strong>{pagination.from}</strong> to <strong>{pagination.to}</strong> out of <strong>{pagination.total}</strong> entr{totalCount !== 1 ? 'ies' : 'y'} </p>
             )}
 
          
@@ -40,7 +40,7 @@ export const Pagination = ({ pagination,  totalCount, filteredCount, search } : 
             <div className="flex gap-2">
                 {pagination.links.map((link, index) => (
                     <Link
-                        className={`px-3 py-2 border rounded ${link.active ? 'bg-gray-700 text-white' : ''}`}
+                        className={`px-3 py-2 border rounded text-sm ${link.active ? 'bg-gray-700 text-white' : ''}`}
                         href={link.url || '#'}
                         key={index}
                         dangerouslySetInnerHTML={{ __html: link.label }}

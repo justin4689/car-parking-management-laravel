@@ -33,7 +33,6 @@ interface CustomTableProps {
 }
 
 export const CustomTable = ({ columns, actions, data, from, onDelete, onView, onEdit, isModal }: CustomTableProps) => {
-    console.log(actions);
 
     const renderActionButtons = (row: TableRow) => {
         return (
@@ -41,16 +40,8 @@ export const CustomTable = ({ columns, actions, data, from, onDelete, onView, on
                 {actions.map((action, index) => {
                     const IconComponent = (LucidIcons as any)[action.icon] as React.ComponentType<{ size?: number }>;
 
-                    // View Functionality
                     if (isModal) {
-                        if (action.label === 'View') {
-                            return (
-                                <Button key={index} className={action.className} onClick={() => onView?.(row)}>
-                                    <IconComponent size={18} />
-                                </Button>
-                            );
-                        }
-
+                       
                         // Edit Functionality
                         if (action.label === 'Edit') {
                             return (
@@ -59,6 +50,15 @@ export const CustomTable = ({ columns, actions, data, from, onDelete, onView, on
                                 </Button>
                             );
                         }
+                    }
+
+                    // View Functionality
+                    if (action.label === 'View') {
+                        return (
+                            <Button key={index} className={action.className} onClick={() => onView?.(row)}>
+                                <IconComponent size={18} />
+                            </Button>
+                        );
                     }
 
                     // Delete Functionality

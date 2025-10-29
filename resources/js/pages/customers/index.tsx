@@ -148,7 +148,7 @@ export default function Index({
         setIsModalOpen(true);
     };
 
-    // View details page
+    // Fonction pour ouvrir la page en mode visualisation
     const handleView = (row: TableRow) => {
         router.visit(`/customers/${(row as any).id}`);
     };

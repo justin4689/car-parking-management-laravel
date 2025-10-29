@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -36,17 +37,10 @@ class CustomerController extends Controller
 
         # Fetch All the Records
         if ($perPage === -1) {
-            $allCustomers = $customersQuery->latest()->get()->map(fn($customer) => [
-                'id'                           => $customer->id,
-                'name'                         => $customer->name,
-                'email'                        => $customer->email,
-                'phone'                        => $customer->phone,
-                'address'                      => $customer->address,
-                'created_at'                   => $customer->created_at->format('d M Y'),
-            ]);
+            $allCustomers = $customersQuery->latest()->get();
 
             $customers = [
-                'data'     => $allCustomers,
+                'data'     => CustomerResource::collection($allCustomers)->toArray($request),
                 'total'    => $filteredCount,
                 'per_page' => $perPage,
                 'from'     => 1,
@@ -55,15 +49,19 @@ class CustomerController extends Controller
             ];
 
         } else {
-            $customers = $customersQuery->latest()->paginate($perPage)->withQueryString();
-            $customers->getCollection()->transform(fn($customer) => [
-                'id'                           => $customer->id,
-                'name'                         => $customer->name,
-                'email'                        => $customer->email,
-                'phone'                        => $customer->phone,
-                'address'                      => $customer->address,
-                'created_at'                   => $customer->created_at->format('d M Y'),
-            ]);
+            $paginator = $customersQuery->latest()->paginate($perPage)->withQueryString();
+            $paginator->getCollection()->transform(
+                fn($customer) => (new CustomerResource($customer))->toArray($request)
+            );
+
+            $arr = $paginator->toArray();
+            $customers = [
+                'data'  => $arr['data'],
+                'links' => $arr['links'],
+                'from'  => $arr['from'],
+                'to'    => $arr['to'],
+                'total' => $arr['total'],
+            ];
         }
 
         return Inertia::render('customers/index', [
@@ -108,15 +106,7 @@ class CustomerController extends Controller
     public function show(Customer $customer)
     {
         return Inertia::render('customers/show', [
-            'customer' => [
-                'id' => $customer->id,
-                'name' => $customer->name,
-                'email' => $customer->email,
-                'phone' => $customer->phone,
-                'address' => $customer->address,
-                'created_at' => $customer->created_at?->format('d M Y'),
-                'updated_at' => $customer->updated_at?->format('d M Y'),
-            ],
+            'customer' => (new CustomerResource($customer))->toArray(request())
         ]);
     }
 
