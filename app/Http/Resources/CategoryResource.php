@@ -19,8 +19,8 @@ class CategoryResource extends JsonResource
             'name' => $this->name,
             'price_per_hour' => $this->price_per_hour,
             'price_per_day' => $this->price_per_day ,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at->format('d M Y'),
+            'updated_at' => $this->updated_at->format('d M Y'),
         ];
     }
 }

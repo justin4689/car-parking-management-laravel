@@ -25,8 +25,8 @@ class CategoryController extends Controller
 
             $categoriesQuery->where(fn($query) =>
                 $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('price_per_hour', 'like', "%{$search}%")
+                    ->orWhere('price_per_day', 'like', "%{$search}%")
             );
         }
 

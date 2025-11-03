@@ -19,7 +19,7 @@ import { CategoryTableConfig } from '@/config/tables/category-table';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
-import { CategoryForm } from './category-form';
+import { VehicleForm } from './vehicle-form';
 
 import { toast } from 'sonner';
 import { CirclePlusIcon, X } from 'lucide-react';
@@ -27,8 +27,8 @@ import { useEffect, useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Manage Categories',
-        href: '/categories',
+        title: 'Manage Vehicles',
+        href: '/vehicles',
     },
 ];
 
@@ -41,13 +41,26 @@ interface LinkProps {
 interface Category {
     id: number;
     name: string;
-    price_per_hour: string;
-    price_per_day: string;
+}
+
+interface Customer {
+    id: number;
+    name: string;
+}
+
+interface Vehicle {
+    id: number;
+    plate_number: string;
+    color: string;
+    brand: string;
+    model: string;
+    category_id: Category;
+    customer_id: Customer;
     created_at: string;
 }
 
-interface CategoryPagination {
-    data: Category[];
+interface VehiclePagination {
+    data: Vehicle[];
     links: LinkProps[];
     from: number;
     to: number;
@@ -60,14 +73,14 @@ interface FilterProps {
 }
 
 interface IndexProps {
-    categories: CategoryPagination;
+    vehicles: VehiclePagination;
     filters: FilterProps;
     totalCount: number;
     filteredCount: number;
 }
 
 export default function Index({
-    categories,
+    vehicles,
     filters,
     totalCount,
     filteredCount,
@@ -76,7 +89,7 @@ export default function Index({
         flash?: { success?: string; error?: string };
     }>().props;
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingCategory, setEditingCategory] = useState<Category | null>(
+    const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(
         null,
     );
 
@@ -143,18 +156,18 @@ export default function Index({
 
     // Fonction pour ouvrir la modale en mode édition
     const handleEdit = (row: TableRow) => {
-        setEditingCategory(row as Category);
+        setEditingVehicle(row as Vehicle);
         setIsModalOpen(true);
     };
 
     // Fonction pour ouvrir la page en mode visualisation
     const handleView = (row: TableRow) => {
-        router.visit(`/categories/${(row as any).id}`);
+        router.visit(`/vehicles/${(row as any).id}`);
     };
 
     // Fonction pour ouvrir la modale en mode création
     const handleAdd = () => {
-        setEditingCategory(null);
+        setEditingVehicle(null);
         setIsModalOpen(true);
 
     };
@@ -162,12 +175,12 @@ export default function Index({
     // Fonction pour fermer la modale
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        setEditingCategory(null);
+        setEditingVehicle(null);
     };
 
     // Handle Delete
     const handleDelete = (route: string) => {
-        if (confirm('Are you sure, you want to delete this category?')) {
+        if (confirm('Are you sure, you want to delete this vehicle?')) {
             router.delete(route, {
                 preserveScroll: true,
                 onSuccess: () => {
@@ -207,7 +220,7 @@ export default function Index({
                             onClick={handleAdd}
                             className="flex items-center gap-2"
                         >
-                            <CirclePlusIcon size={16} /> Add Category
+                            <CirclePlusIcon size={16} /> Add Vehicle
                         </Button>
                       
                         <Dialog
@@ -217,13 +230,13 @@ export default function Index({
                             <DialogContent className="sm:max-w-[500px]">
                                 <DialogHeader>
                                     <DialogTitle>
-                                        {editingCategory
-                                            ? 'Edit Category'
-                                            : 'Add New Category'}
+                                        {editingVehicle
+                                            ? 'Edit Vehicle'
+                                            : 'Add New Vehicle'}
                                     </DialogTitle>
                                 </DialogHeader>
-                                <CategoryForm
-                                    category={editingCategory}
+                                <VehicleForm
+                                    vehicle={editingVehicle}
                                     onSuccess={handleCloseModal}
                                     onCancel={handleCloseModal}
                                 />
@@ -256,8 +269,8 @@ export default function Index({
                 <CustomTable
                     columns={CategoryTableConfig.columns}
                     actions={CategoryTableConfig.actions}
-                    data={categories.data}
-                    from={categories.from}
+                    data={vehicles.data}
+                    from={vehicles.from}
                     onDelete={handleDelete}
                     onEdit={handleEdit}
                     onView={handleView}
@@ -266,7 +279,7 @@ export default function Index({
 
                 {/* Pagination */}
                 <Pagination
-                    pagination={categories}
+                    pagination={vehicles}
                     totalCount={totalCount}
                     filteredCount={filteredCount}
                     search={data.search}
