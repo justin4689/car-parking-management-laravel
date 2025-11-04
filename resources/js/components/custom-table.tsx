@@ -36,7 +36,7 @@ export const CustomTable = ({ columns, actions, data, from, onDelete, onView, on
 
     const renderActionButtons = (row: TableRow) => {
         return (
-            <div className="flex">
+            <div className="flex justify-center">
                 {actions.map((action, index) => {
                     const IconComponent = (LucidIcons as any)[action.icon] as React.ComponentType<{ size?: number }>;
 

@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\VehicleResource;
 use App\Models\Vehicle;
+use App\Models\Category;
+use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class VehicleController extends Controller
@@ -64,9 +67,11 @@ class VehicleController extends Controller
 
         return Inertia::render('vehicles/index', [
             'vehicles'      => $vehicles,
-            'filters'       => $request->only(  ['search', 'perPage']),
+            'filters'       => $request->only(['search', 'perPage']),
             'totalCount'    => $totalCount,
             'filteredCount' => $filteredCount,
+            'categories'    => Category::select('id', 'name')->orderBy('name')->get(),
+            'customers'     => Customer::select('id', 'name' )->orderBy('name')->get(),
         ]);
     }
 
@@ -136,7 +141,7 @@ class VehicleController extends Controller
     {
         //
         $validated = $request->validate([
-        'plate_number' => 'required|string|max:255|unique:vehicles,plate_number',
+        'plate_number' => 'required|string|max:255|' . Rule::unique('vehicles', 'plate_number')->ignore($vehicle->id),
         'color' => 'required|string|max:255',
         'brand' => 'required|string|max:255',
         'model' => 'required|string|max:255',

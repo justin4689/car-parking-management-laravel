@@ -10,27 +10,32 @@ interface VehicleShowProps {
     color: string;
     brand: string;
     model: string;
-    category_id: Category;
-    customer_id: Customer;
+    category: Category;
+    customer: Customer;
     created_at?: string | null;
     updated_at?: string | null;
   };
   
 }
 
+
+  
 interface Category {
     id: number;
     name: string;
-    created_at?: string | null;
-    updated_at?: string | null;
-  }
-  
+}
+
 interface Customer {
     id: number;
     name: string;
-    created_at?: string | null;
-    updated_at?: string | null;
-  }
+    email: string;
+    phone: string;
+    address: string;
+}
+
+
+  
+
 
 export default function VehicleShow({ vehicle }: VehicleShowProps) {
   const breadcrumbs: BreadcrumbItem[] = [
@@ -40,13 +45,13 @@ export default function VehicleShow({ vehicle }: VehicleShowProps) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title={`Vehicle: ${vehicle.name}`} />
+      <Head title={`Vehicle: ${vehicle.plate_number}`} />
 
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-semibold">Vehicle Details</h1>
           <Button asChild variant="outline">
-            <Link href="/categories">Back</Link>
+            <Link href="/vehicles">Back</Link>
           </Button>
         </div>
 
@@ -70,11 +75,11 @@ export default function VehicleShow({ vehicle }: VehicleShowProps) {
           </div>
           <div>
             <div className="text-xs text-gray-500">Category</div>
-            <div className="text-sm font-medium">{vehicle.category_id.name}</div>
+            <div className="text-sm font-medium">{vehicle.category.name}</div>
           </div>
           <div>
             <div className="text-xs text-gray-500">Customer</div>
-            <div className="text-sm font-medium">{vehicle.customer_id.name}</div>
+            <div className="text-sm font-medium">{vehicle.customer.name}</div>
           </div>
        
           {vehicle.created_at && (
@@ -86,7 +91,7 @@ export default function VehicleShow({ vehicle }: VehicleShowProps) {
           {vehicle.updated_at && (
             <div>
               <div className="text-xs text-gray-500">Updated</div>
-              <div className="text-sm font-medium">{category.updated_at}</div>
+              <div className="text-sm font-medium">{vehicle.updated_at}</div>
             </div>
           )}
         </div>

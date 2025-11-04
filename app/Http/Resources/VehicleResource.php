@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\CustomerResource;
 
 class VehicleResource extends JsonResource
 {
@@ -20,12 +22,15 @@ class VehicleResource extends JsonResource
             'color' => $this->color,
             'brand' => $this->brand,
             'model' => $this->model,
-            
-          'category' => $this->whenLoaded('category', fn() => [
+            'category_id' => $this->category_id,
+            'customer_id' => $this->customer_id,
+            // flat fields for table
+            'category_name' => $this->whenLoaded('category', fn() => $this->category->name),
+            'customer_name' => $this->whenLoaded('customer', fn() => $this->customer->name),
+            // full relations for detail pages
+            'category' => $this->whenLoaded('category', fn() => [
                 'id' => $this->category->id,
                 'name' => $this->category->name,
-                'price_per_hour' => $this->category->price_per_hour,
-                'price_per_day' => $this->category->price_per_day,
             ]),
             'customer' => $this->whenLoaded('customer', fn() => [
                 'id' => $this->customer->id,
@@ -34,8 +39,8 @@ class VehicleResource extends JsonResource
                 'phone' => $this->customer->phone,
                 'address' => $this->customer->address,
             ]),
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+            'created_at' => $this->created_at->format('d M Y'),
+            'updated_at' => $this->updated_at->format('d M Y'),
         ];
     }
 }

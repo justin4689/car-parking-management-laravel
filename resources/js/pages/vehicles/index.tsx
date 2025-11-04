@@ -15,7 +15,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { CategoryTableConfig } from '@/config/tables/category-table';
+import { VehicleTableConfig } from '@/config/tables/vehicle-table';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
@@ -46,16 +46,19 @@ interface Category {
 interface Customer {
     id: number;
     name: string;
+    email: string;
+    phone: string;
+    address: string;
 }
 
-interface Vehicle {
+  interface Vehicle {
     id: number;
     plate_number: string;
     color: string;
     brand: string;
     model: string;
-    category_id: Category;
-    customer_id: Customer;
+    category: Category;
+    customer: Customer;
     created_at: string;
 }
 
@@ -77,6 +80,8 @@ interface IndexProps {
     filters: FilterProps;
     totalCount: number;
     filteredCount: number;
+    categories: Category[];
+    customers: Customer[];
 }
 
 export default function Index({
@@ -84,6 +89,8 @@ export default function Index({
     filters,
     totalCount,
     filteredCount,
+    categories,
+    customers,
 }: IndexProps) {
     const { flash } = usePage<{
         flash?: { success?: string; error?: string };
@@ -117,11 +124,11 @@ export default function Index({
             ...(data.perPage && { perPage: data.perPage }),
         };
 
-        router.get('/categories', queryString, {
+        router.get('/vehicles', queryString, {
             preserveState: true,
             preserveScroll: true,
             replace: true,
-            only: ['categories', 'filters', 'totalCount', 'filteredCount'],
+            only: ['vehicles', 'filters', 'totalCount', 'filteredCount', 'categories', 'customers'],
         });
     };
 
@@ -130,10 +137,10 @@ export default function Index({
         setData('search', '');
         setData('perPage', '10');
 
-        router.visit('/categories', {
+        router.visit('/vehicles', {
             preserveState: true,
             preserveScroll: true,
-            only: ['categories', 'filters', 'totalCount', 'filteredCount'],
+            only: ['vehicles', 'filters', 'totalCount', 'filteredCount', 'categories', 'customers'],
         });
     };
 
@@ -146,11 +153,11 @@ export default function Index({
             ...(value && { perPage: value }),
         };
 
-        router.get('/categories', queryString, {
+        router.get('/vehicles', queryString, {
             preserveState: true,
             preserveScroll: true,
             replace: true,
-            only: ['categories', 'filters', 'totalCount', 'filteredCount'],
+            only: ['vehicles', 'filters', 'totalCount', 'filteredCount', 'categories', 'customers'],
         });
     };
 
@@ -192,7 +199,7 @@ export default function Index({
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Customer Management" />
+            <Head title="Vehicle Management" />
             
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
 
@@ -203,7 +210,7 @@ export default function Index({
                         value={data.search}
                         onChange={handleChange}
                         className="h-10 w-1/2"
-                        placeholder="Search customer by name ..."
+                        placeholder="Search vehicle by plate number ..."
                         name="search"
                     />
 
@@ -227,7 +234,7 @@ export default function Index({
                             open={isModalOpen}
                             onOpenChange={setIsModalOpen}
                         >
-                            <DialogContent className="sm:max-w-[500px]">
+                            <DialogContent className="sm:max-w-[700px]">
                                 <DialogHeader>
                                     <DialogTitle>
                                         {editingVehicle
@@ -237,6 +244,8 @@ export default function Index({
                                 </DialogHeader>
                                 <VehicleForm
                                     vehicle={editingVehicle}
+                                    categories={categories}
+                                    customers={customers}
                                     onSuccess={handleCloseModal}
                                     onCancel={handleCloseModal}
                                 />
@@ -267,8 +276,8 @@ export default function Index({
 
                 {/* Custom Table component */}
                 <CustomTable
-                    columns={CategoryTableConfig.columns}
-                    actions={CategoryTableConfig.actions}
+                    columns={VehicleTableConfig.columns}
+                    actions={VehicleTableConfig.actions}
                     data={vehicles.data}
                     from={vehicles.from}
                     onDelete={handleDelete}
