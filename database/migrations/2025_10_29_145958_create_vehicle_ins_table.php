@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
             $table->datetime('entry_time');
             $table->string('parking_spot');
-            $table->enum('status ', ['active ', 'exited']);
             $table->timestamps();
         });
     }

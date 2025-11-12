@@ -34,6 +34,7 @@ interface CustomTableProps {
 
 export const CustomTable = ({ columns, actions, data, from, onDelete, onView, onEdit, isModal }: CustomTableProps) => {
 
+
     const renderActionButtons = (row: TableRow) => {
         return (
             <div className="flex justify-center">

@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid ,User,Shapes ,Car } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid ,User,Shapes ,Car ,CarFront } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -36,6 +36,11 @@ const mainNavItems: NavItem[] = [
         title: 'Manage Vehicles',
         href: "/vehicles",
         icon: Car,
+    },
+    {
+        title: 'Manage Vehicles In',
+        href: "/vehicleins",
+        icon: CarFront,
     },
 ];
 
